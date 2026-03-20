@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import { api } from "@/lib/mockData";
+import { useAuth } from "@/lib/AuthContext";
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
