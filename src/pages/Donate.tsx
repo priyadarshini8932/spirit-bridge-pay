@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import ScrollReveal from "@/components/ScrollReveal";
 import { api } from "@/lib/mockData";
+import { useAuth } from "@/lib/AuthContext";
 
 const paymentMethods = ["UPI", "Card", "Net Banking"];
 
