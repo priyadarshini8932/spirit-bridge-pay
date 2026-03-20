@@ -31,7 +31,7 @@ const Donate = () => {
         phone: form.phone,
         amount: Number(form.amount),
         paymentMethod: form.paymentMethod,
-      });
+      }, user?.id);
       setLoading(false);
       toast.success(`Donation of ₹${form.amount} received! Transaction ID: ${donation.transactionId}`);
       setForm({ name: "", email: "", phone: "", amount: "", paymentMethod: "UPI" });

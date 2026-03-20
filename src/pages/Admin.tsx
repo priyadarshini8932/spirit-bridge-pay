@@ -1,49 +1,30 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { LogOut, IndianRupee, Mail, Gift } from "lucide-react";
 import { api } from "@/lib/mockData";
+import { useAuth } from "@/lib/AuthContext";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const Admin = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { user, isAdmin, logout } = useAuth();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<"donations" | "messages">("donations");
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (api.login(email, password)) {
-      setLoggedIn(true);
-      toast.success("Welcome, Admin!");
-    } else {
-      toast.error("Invalid credentials. Try admin@temple.com / admin123");
-    }
-  };
-
-  const inputClass =
-    "w-full px-4 py-3 rounded-lg bg-background border border-border text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 transition-shadow";
-
-  if (!loggedIn) {
+  if (!user || !isAdmin) {
     return (
       <div className="pt-20 min-h-screen flex items-center justify-center bg-saffron-subtle">
         <ScrollReveal>
-          <form onSubmit={handleLogin} className="bg-card rounded-xl p-8 border border-border/50 shadow-md w-full max-w-sm space-y-5">
-            <div className="text-center">
-              <h1 className="font-display text-2xl font-bold mb-1">Admin Login</h1>
-              <p className="text-xs text-muted-foreground">admin@temple.com / admin123</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Email</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@temple.com" className={inputClass} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className={inputClass} />
-            </div>
-            <button type="submit" className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity active:scale-[0.97]">
-              Login
+          <div className="bg-card rounded-xl p-8 border border-border/50 shadow-md max-w-sm text-center space-y-4">
+            <h1 className="font-display text-2xl font-bold">Admin Access Only</h1>
+            <p className="text-sm text-muted-foreground">Please login with an admin account to access this panel.</p>
+            <button
+              onClick={() => navigate("/login")}
+              className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity active:scale-[0.97]"
+            >
+              Go to Login
             </button>
-          </form>
+          </div>
         </ScrollReveal>
       </div>
     );
@@ -53,21 +34,25 @@ const Admin = () => {
   const totalDonations = api.getTotalDonations();
   const messages = api.getMessages();
 
+  const handleLogout = () => {
+    logout();
+    toast.info("Logged out");
+    navigate("/");
+  };
+
   return (
     <div className="pt-20 min-h-screen bg-card/50">
       <div className="container-temple py-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="font-display text-2xl font-bold">Admin Dashboard</h1>
           <button
-            onClick={() => { setLoggedIn(false); toast.info("Logged out"); }}
+            onClick={handleLogout}
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-background border border-border hover:bg-muted transition-colors active:scale-[0.97]"
           >
             <LogOut size={16} /> Logout
           </button>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {[
             { icon: IndianRupee, label: "Total Donations", value: `₹${totalDonations.toLocaleString("en-IN")}` },
@@ -86,7 +71,6 @@ const Admin = () => {
           ))}
         </div>
 
-        {/* Tabs */}
         <div className="flex gap-1 mb-6 bg-muted rounded-lg p-1 w-fit">
           {(["donations", "messages"] as const).map((t) => (
             <button
@@ -101,7 +85,6 @@ const Admin = () => {
           ))}
         </div>
 
-        {/* Table */}
         <div className="bg-background rounded-xl border border-border/50 shadow-sm overflow-x-auto">
           {tab === "donations" ? (
             <table className="w-full text-sm">

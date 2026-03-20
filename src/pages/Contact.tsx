@@ -18,7 +18,7 @@ const Contact = () => {
     }
     setLoading(true);
     setTimeout(() => {
-      api.addMessage(form);
+      api.addMessage(form, user?.id);
       setLoading(false);
       toast.success("Message sent successfully!");
       setForm({ name: "", email: "", message: "" });
