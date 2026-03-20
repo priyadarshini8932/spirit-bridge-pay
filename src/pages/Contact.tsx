@@ -6,7 +6,8 @@ import { api } from "@/lib/mockData";
 import { useAuth } from "@/lib/AuthContext";
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const { user } = useAuth();
+  const [form, setForm] = useState({ name: user?.name || "", email: user?.email || "", message: "" });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
