@@ -7,7 +7,8 @@ import { useAuth } from "@/lib/AuthContext";
 const paymentMethods = ["UPI", "Card", "Net Banking"];
 
 const Donate = () => {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", amount: "", paymentMethod: "UPI" });
+  const { user } = useAuth();
+  const [form, setForm] = useState({ name: user?.name || "", email: user?.email || "", phone: user?.phone || "", amount: "", paymentMethod: "UPI" });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
