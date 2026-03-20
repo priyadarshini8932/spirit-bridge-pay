@@ -3,9 +3,11 @@ import { toast } from "sonner";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import { api } from "@/lib/mockData";
+import { useAuth } from "@/lib/AuthContext";
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const { user } = useAuth();
+  const [form, setForm] = useState({ name: user?.name || "", email: user?.email || "", message: "" });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -16,7 +18,7 @@ const Contact = () => {
     }
     setLoading(true);
     setTimeout(() => {
-      api.addMessage(form);
+      api.addMessage(form, user?.id);
       setLoading(false);
       toast.success("Message sent successfully!");
       setForm({ name: "", email: "", message: "" });
